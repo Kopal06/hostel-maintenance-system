@@ -28,15 +28,40 @@ class CAFVANode {
     this.w3 = cfg.w3 ?? 0.2;
     this.occupancyOverrideRatio = cfg.occupancyOverrideRatio ?? 0.5;
     this.criticalLimit = cfg.criticalLimit ?? null;
+    // FIX (2026-07-26): R1's Section 14 worked example requires a reading
+    // that sits INSIDE [Lmin, Lmax] to still be treated as anomalous, based
+    // purely on how long it persists with nobody present (a tap running at
+    // a perfectly normal rate, but all night, with the bathroom empty).
+    // That is impossible under a literal "outside the band = anomalous"
+    // rule (see the previous commit's failing test). Introducing an
+    // explicit trigger mode resolves the contradiction without touching the
+    // fault-score formula itself:
+    //   'band'     - anomalous when OUTSIDE [Lmin, Lmax] (R1's literal Step 2
+    //                wording; fine for sensors like temperature/light where
+    //                any excursion from a safe range is itself notable).
+    //   'activity' - anomalous when ABOVE Lmin, i.e. "the tap/appliance is
+    //                on at all"; Lmax is then just a critical ceiling. This
+    //                is what the flow-sensor worked example actually needs.
+    this.triggerMode = cfg.triggerMode ?? 'band';
 
     this._anomalyStart = null;
     this._occupiedSamples = 0;
     this._totalSamples = 0;
     this._state = STATE.NORMAL;
+    this._prevSampleMs = null; // timestamp of the previous processing cycle
   }
 
   step(s, p, nowMs) {
-    const anomalous = s < this.Lmin || s > this.Lmax;
+    // The previous cycle's timestamp is the last moment we know the reading
+    // was (at worst) not-yet-flagged. Using it as the anomaly's t=0, rather
+    // than nowMs, avoids a systematic one-sample-period undercount of the
+    // anomaly duration (discovered while validating against the R1
+    // worked example - see commit history / Review-2 report).
+    const prevMs = this._prevSampleMs;
+    this._prevSampleMs = nowMs;
+
+    const anomalous =
+      this.triggerMode === 'activity' ? s > this.Lmin : s < this.Lmin || s > this.Lmax;
 
     if (this.criticalLimit !== null && Math.abs(s) >= this.criticalLimit) {
       this._resetAnomaly();
@@ -51,7 +76,7 @@ class CAFVANode {
     }
 
     if (this._anomalyStart === null) {
-      this._anomalyStart = nowMs;
+      this._anomalyStart = prevMs !== null ? prevMs : nowMs;
       this._occupiedSamples = 0;
       this._totalSamples = 0;
     }
