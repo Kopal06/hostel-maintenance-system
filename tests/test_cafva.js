@@ -32,7 +32,7 @@ function check(label, cond) {
 
 console.log('--- Test 1: R1 Section 14 worked example (unattended tap, 2 AM) ---');
 {
-  const node = new CAFVANode({ Lmin: 0.5, Lmax: 6, Wsusp: 120, Wfault: 300 });
+  const node = new CAFVANode({ Lmin: 0.5, Lmax: 6, Wsusp: 120, Wfault: 300, triggerMode: 'activity' });
   let last;
   for (let t = 1; t <= 300; t += 1) {
     last = node.step(3.2, 0, t * 1000);
