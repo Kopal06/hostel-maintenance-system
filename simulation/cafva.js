@@ -1,10 +1,20 @@
 /**
- * cafva.js - v1 (first pass)
+ * cafva.js
  * ---------------------------------------------------------------------------
- * Direct implementation of Section 12 (ALGORITHM / METHOD) and Section 13
- * (MATHEMATICAL / TECHNICAL MODEL) from the R1 draft. This first version
- * follows the R1 wording literally: an anomaly is any reading OUTSIDE the
- * [Lmin, Lmax] normal-usage band (Section 12, Step 2).
+ * Context-Aware Fault Verification Algorithm (CAFVA).
+ *
+ * Implementation of Section 12 (ALGORITHM / METHOD) and Section 13
+ * (MATHEMATICAL / TECHNICAL MODEL) from the R1 patent-specification draft,
+ * after two rounds of fixes against R1's own Section 14 worked example (see
+ * git history: the literal Section 12 anomaly-trigger definition directly
+ * contradicted the Section 14 example, and the naive duration calculation
+ * undercounted by one sample period — both documented and fixed as separate
+ * commits rather than folded together).
+ *
+ * This file is the reference implementation. The exact same decision logic
+ * is ported to C++ for the real ESP32 firmware in
+ * firmware/esp32_node/cafva.h — any behavioural change belongs in both
+ * places, re-validated against tests/test_cafva.js.
  */
 
 'use strict';
@@ -16,6 +26,27 @@ const STATE = Object.freeze({
 });
 
 class CAFVANode {
+  /**
+   * @param {Object} cfg
+   * @param {number} cfg.Lmin - lower edge of the normal-usage band (or the
+   *        activity threshold, in 'activity' trigger mode)
+   * @param {number} cfg.Lmax - upper edge of the normal-usage band (or the
+   *        critical ceiling, in 'activity' trigger mode)
+   * @param {number} cfg.Wsusp - seconds of unoccupied anomaly before
+   *        SUSPICIOUS becomes possible
+   * @param {number} cfg.Wfault - seconds of unoccupied anomaly before an
+   *        automatic FAULT regardless of fault score
+   * @param {number} [cfg.Tsusp=0.4] / {number} [cfg.Tfault=0.75] - fault
+   *        score thresholds (Section 13)
+   * @param {number} [cfg.w1=0.4] [cfg.w2=0.4] [cfg.w3=0.2] - fault-score
+   *        weights on duration / occupancy / magnitude-deviation
+   * @param {number} [cfg.occupancyOverrideRatio=0.5] - Op above which an
+   *        anomaly is forced back to NORMAL (Section 12, Step 5)
+   * @param {number} [cfg.criticalLimit] - optional absolute value; |S|
+   *        crossing it triggers immediate FAULT (Step 6, current-spike case)
+   * @param {'band'|'activity'} [cfg.triggerMode='band'] - see fix commit
+   *        and docs above for why this exists.
+   */
   constructor(cfg) {
     this.Lmin = cfg.Lmin;
     this.Lmax = cfg.Lmax;
