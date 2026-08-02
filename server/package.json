@@ -1,0 +1,14 @@
+{
+  "name": "hostel-maintenance-server",
+  "version": "0.2.0",
+  "description": "Central server for the Context-Aware Fault Verification and Networked Maintenance Alert System",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "express": "^4.19.2",
+    "ws": "^8.18.0"
+  }
+}
