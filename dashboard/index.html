@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Facility Watch — Hostel Maintenance Alerts</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">FW</span>
+        <div class="brand-text">
+          <h1>Facility Watch</h1>
+          <p>Context-aware maintenance alerts &middot; Block Wings A&ndash;D</p>
+        </div>
+      </div>
+      <div class="status-line">
+        <span id="conn-dot" class="dot dot--off"></span>
+        <span id="conn-label">Connecting&hellip;</span>
+      </div>
+    </header>
+
+    <section class="metrics">
+      <div class="metric">
+        <span class="metric-value" id="m-total">&mdash;</span>
+        <span class="metric-label">Events logged</span>
+      </div>
+      <div class="metric metric--fault">
+        <span class="metric-value" id="m-fault">&mdash;</span>
+        <span class="metric-label">Verified faults</span>
+      </div>
+      <div class="metric metric--susp">
+        <span class="metric-value" id="m-susp">&mdash;</span>
+        <span class="metric-label">Suspicious, watching</span>
+      </div>
+      <div class="metric">
+        <span class="metric-value" id="m-mtta">&mdash;</span>
+        <span class="metric-label">Avg. response time</span>
+      </div>
+    </section>
+
+    <main class="board">
+      <section class="column">
+        <h2>Active alerts <span class="count" id="active-count">0</span></h2>
+        <div id="active-list" class="alert-list">
+          <p class="empty-state">No active alerts. Every monitored facility is reading Normal Usage.</p>
+        </div>
+      </section>
+
+      <section class="column column--log">
+        <h2>Event log</h2>
+        <div id="log-list" class="alert-list alert-list--compact"></div>
+      </section>
+    </main>
+  </div>
+
+  <template id="alert-card-template">
+    <article class="card">
+      <div class="card-top">
+        <span class="badge"></span>
+        <span class="card-node"></span>
+      </div>
+      <p class="card-location"></p>
+      <p class="card-detail"></p>
+      <div class="card-meta">
+        <span class="card-time"></span>
+        <span class="card-score"></span>
+      </div>
+      <div class="card-actions">
+        <button class="btn btn-ack" data-action="acknowledge">Acknowledge</button>
+        <button class="btn btn-resolve" data-action="resolve">Mark resolved</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
