@@ -20,6 +20,7 @@
     const node = template.content.firstElementChild.cloneNode(true);
     node.classList.add(severityClass(evt.classification));
     if (evt.resolved_at) node.classList.add('state-resolved');
+    node.setAttribute('data-event-id', evt.id);
 
     node.querySelector('.badge').textContent = evt.classification;
     node.querySelector('.card-node').textContent = evt.node_id;
@@ -56,8 +57,35 @@
   }
 
   async function postAction(id, action) {
+    // Immediate visual feedback so a click doesn't feel like nothing happened
+    // — the WebSocket refresh that follows can take a beat.
+    const card = document.querySelector(`[data-event-id="${id}"]`);
+    if (card) {
+      const btn = card.querySelector(`[data-action="${action}"]`);
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = action === 'resolve' ? 'Resolving…' : 'Acknowledging…';
+      }
+      card.style.transition = 'opacity 0.3s ease';
+    }
+    showToast(action === 'resolve' ? 'Alert marked resolved' : 'Alert acknowledged');
     await fetch(`/api/events/${id}/${action}`, { method: 'POST' });
     // The WebSocket broadcast will trigger a re-render.
+  }
+
+  let toastTimer = null;
+  function showToast(message) {
+    let toast = document.getElementById('toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'toast';
+      toast.className = 'toast';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.add('toast--visible');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('toast--visible'), 2200);
   }
 
   async function refreshAll() {

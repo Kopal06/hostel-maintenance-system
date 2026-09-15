@@ -139,6 +139,11 @@ body {
   font-size: 12px;
   font-weight: 600;
 }
+.hint {
+  font-size: 12px;
+  color: var(--slate-500);
+  margin: -6px 0 14px;
+}
 
 .alert-list { display: flex; flex-direction: column; gap: 10px; }
 .alert-list--compact .card { padding: 12px 14px; }
@@ -221,3 +226,21 @@ body {
 .btn-resolve { color: var(--green); border-color: var(--green); }
 .btn-resolve:hover { background: #eaf5ef; }
 .btn:disabled { opacity: 0.45; cursor: default; }
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 100;
+}
+.toast--visible { opacity: 1; transform: translateX(-50%) translateY(0); }
