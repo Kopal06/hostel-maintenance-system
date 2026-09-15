@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Facility Watch — Overview</title>
-<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="frontend/style.css">
 </head>
 <body data-page="dashboard">
   <div id="nav-mount"></div>
@@ -39,13 +39,13 @@
     <div class="board" style="margin-top: 28px;">
       <section class="column">
         <h2>Active alerts <span class="count" id="active-count">0</span></h2>
-        <p class="hint">Showing up to 3 most recent. <a href="alerts.html">See all active alerts &rarr;</a></p>
+        <p class="hint">Showing up to 3 most recent. <a href="frontend/alerts.html">See all active alerts &rarr;</a></p>
         <div id="active-preview" class="alert-list"></div>
       </section>
 
       <section class="column">
         <h2>Recently registered nodes</h2>
-        <p class="hint"><a href="nodes.html">See all nodes &rarr;</a></p>
+        <p class="hint"><a href="frontend/nodes.html">See all nodes &rarr;</a></p>
         <div id="node-preview" class="alert-list alert-list--compact"></div>
       </section>
     </div>
@@ -66,8 +66,9 @@
     </article>
   </template>
 
-  <script src="shared/api.js"></script>
-  <script src="shared/nav.js"></script>
-  <script src="index.js"></script>
+  <script src="frontend/shared/api.js"></script>
+  <script src="frontend/shared/nav.js"></script>
+  <script src="frontend/index.js"></script>
+  
 </body>
 </html>

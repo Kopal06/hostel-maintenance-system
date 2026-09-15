@@ -8,13 +8,19 @@
 (function () {
   'use strict';
 
+  // Root index.html loads this script from /frontend/shared/,
+  // while the other pages are already inside /frontend/.
+  const isRootPage = !window.location.pathname.includes('/frontend/');
+
+  const base = isRootPage ? 'frontend/' : '';
+
   const PAGES = [
-    { href: 'index.html', key: 'dashboard', label: 'Dashboard' },
-    { href: 'alerts.html', key: 'alerts', label: 'Active Alerts' },
-    { href: 'log.html', key: 'log', label: 'Event Log' },
-    { href: 'nodes.html', key: 'nodes', label: 'Nodes' },
-    { href: 'metrics.html', key: 'metrics', label: 'Metrics' },
-    { href: 'about.html', key: 'about', label: 'About' },
+    { href: `${base}index.html`, key: 'dashboard', label: 'Dashboard' },
+    { href: `${base}alerts.html`, key: 'alerts', label: 'Active Alerts' },
+    { href: `${base}log.html`, key: 'log', label: 'Event Log' },
+    { href: `${base}nodes.html`, key: 'nodes', label: 'Nodes' },
+    { href: `${base}metrics.html`, key: 'metrics', label: 'Metrics' },
+    { href: `${base}about.html`, key: 'about', label: 'About' },
   ];
 
   function render() {
@@ -29,7 +35,7 @@
 
     mount.innerHTML = `
       <header class="topbar">
-        <a class="brand" href="index.html">
+        <a class="brand" href="${base}index.html">
           <span class="brand-mark">FW</span>
           <div class="brand-text">
             <h1>Facility Watch</h1>
