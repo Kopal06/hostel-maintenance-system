@@ -8,10 +8,6 @@
 
   const BASE = '/hostel-maintenance-system/';
 
-  const isRootPage =
-    window.location.pathname === BASE ||
-    window.location.pathname === `${BASE}index.html`;
-
   const PAGES = [
     {
       href: `${BASE}index.html`,
