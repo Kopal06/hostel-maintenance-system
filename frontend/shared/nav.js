@@ -1,31 +1,52 @@
 /**
  * nav.js
  * ---------------------------------------------------------------------------
- * Injects the same top navigation bar into every page of the (multi-page,
- * not single-page) dashboard. Each page sets <body data-page="..."> so the
- * matching nav link gets highlighted.
+ * Injects the same top navigation bar into every page.
  */
 (function () {
   'use strict';
 
-  // Root index.html loads this script from /frontend/shared/,
-  // while the other pages are already inside /frontend/.
-  const isRootPage = !window.location.pathname.includes('/frontend/');
-
-  const base = isRootPage ? 'frontend/' : '';
+  const isRootPage =
+    window.location.pathname.endsWith('/') ||
+    window.location.pathname.endsWith('/index.html');
 
   const PAGES = [
-    { href: `${base}index.html`, key: 'dashboard', label: 'Dashboard' },
-    { href: `${base}alerts.html`, key: 'alerts', label: 'Active Alerts' },
-    { href: `${base}log.html`, key: 'log', label: 'Event Log' },
-    { href: `${base}nodes.html`, key: 'nodes', label: 'Nodes' },
-    { href: `${base}metrics.html`, key: 'metrics', label: 'Metrics' },
-    { href: `${base}about.html`, key: 'about', label: 'About' },
+    {
+      href: isRootPage ? 'index.html' : '../index.html',
+      key: 'dashboard',
+      label: 'Dashboard'
+    },
+    {
+      href: isRootPage ? 'frontend/alerts.html' : 'alerts.html',
+      key: 'alerts',
+      label: 'Active Alerts'
+    },
+    {
+      href: isRootPage ? 'frontend/log.html' : 'log.html',
+      key: 'log',
+      label: 'Event Log'
+    },
+    {
+      href: isRootPage ? 'frontend/nodes.html' : 'nodes.html',
+      key: 'nodes',
+      label: 'Nodes'
+    },
+    {
+      href: isRootPage ? 'frontend/metrics.html' : 'metrics.html',
+      key: 'metrics',
+      label: 'Metrics'
+    },
+    {
+      href: isRootPage ? 'frontend/about.html' : 'about.html',
+      key: 'about',
+      label: 'About'
+    },
   ];
 
   function render() {
     const current = document.body.getAttribute('data-page') || 'dashboard';
     const mount = document.getElementById('nav-mount');
+
     if (!mount) return;
 
     const links = PAGES.map(
@@ -35,18 +56,20 @@
 
     mount.innerHTML = `
       <header class="topbar">
-        <a class="brand" href="${base}index.html">
+        <a class="brand" href="${isRootPage ? 'index.html' : '../index.html'}">
           <span class="brand-mark">FW</span>
           <div class="brand-text">
             <h1>Facility Watch</h1>
             <p>Context-aware maintenance alerts &middot; Block Wings A&ndash;D</p>
           </div>
         </a>
+
         <div class="status-line">
           <span id="conn-dot" class="dot dot--off"></span>
           <span id="conn-label">Connecting&hellip;</span>
         </div>
       </header>
+
       <nav class="navbar">${links}</nav>
     `;
   }
