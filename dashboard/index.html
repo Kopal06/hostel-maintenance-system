@@ -3,24 +3,19 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Facility Watch — Hostel Maintenance Alerts</title>
+<title>Facility Watch — Overview</title>
 <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <div class="app">
-    <header class="topbar">
-      <div class="brand">
-        <span class="brand-mark">FW</span>
-        <div class="brand-text">
-          <h1>Facility Watch</h1>
-          <p>Context-aware maintenance alerts &middot; Block Wings A&ndash;D</p>
-        </div>
+<body data-page="dashboard">
+  <div id="nav-mount"></div>
+
+  <main class="page">
+    <div class="page-header">
+      <div>
+        <h2>Overview</h2>
+        <p class="page-sub">Live snapshot across all monitored facilities.</p>
       </div>
-      <div class="status-line">
-        <span id="conn-dot" class="dot dot--off"></span>
-        <span id="conn-label">Connecting&hellip;</span>
-      </div>
-    </header>
+    </div>
 
     <section class="metrics">
       <div class="metric">
@@ -41,21 +36,20 @@
       </div>
     </section>
 
-    <main class="board">
+    <div class="board" style="margin-top: 28px;">
       <section class="column">
         <h2>Active alerts <span class="count" id="active-count">0</span></h2>
-        <p class="hint">Acknowledge/resolve here moves a card to the log on the right — it doesn't delete it.</p>
-        <div id="active-list" class="alert-list">
-          <p class="empty-state">No active alerts. Every monitored facility is reading Normal Usage.</p>
-        </div>
+        <p class="hint">Showing up to 3 most recent. <a href="alerts.html">See all active alerts &rarr;</a></p>
+        <div id="active-preview" class="alert-list"></div>
       </section>
 
-      <section class="column column--log">
-        <h2>Event log</h2>
-        <div id="log-list" class="alert-list alert-list--compact"></div>
+      <section class="column">
+        <h2>Recently registered nodes</h2>
+        <p class="hint"><a href="nodes.html">See all nodes &rarr;</a></p>
+        <div id="node-preview" class="alert-list alert-list--compact"></div>
       </section>
-    </main>
-  </div>
+    </div>
+  </main>
 
   <template id="alert-card-template">
     <article class="card">
@@ -69,13 +63,11 @@
         <span class="card-time"></span>
         <span class="card-score"></span>
       </div>
-      <div class="card-actions">
-        <button class="btn btn-ack" data-action="acknowledge">Acknowledge</button>
-        <button class="btn btn-resolve" data-action="resolve">Mark resolved</button>
-      </div>
     </article>
   </template>
 
-  <script src="app.js"></script>
+  <script src="shared/api.js"></script>
+  <script src="shared/nav.js"></script>
+  <script src="index.js"></script>
 </body>
 </html>

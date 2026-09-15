@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Facility Watch — Metrics</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="metrics">
+  <div id="nav-mount"></div>
+
+  <main class="page">
+    <div class="page-header">
+      <div>
+        <h2>Metrics</h2>
+        <p class="page-sub">Aggregate view across all nodes. Useful for spotting which fixture type or block generates the most alerts.</p>
+      </div>
+    </div>
+
+    <section class="metrics" style="margin-bottom: 24px;">
+      <div class="metric">
+        <span class="metric-value" id="m-total">&mdash;</span>
+        <span class="metric-label">Events logged</span>
+      </div>
+      <div class="metric metric--fault">
+        <span class="metric-value" id="m-fault">&mdash;</span>
+        <span class="metric-label">Verified faults</span>
+      </div>
+      <div class="metric metric--susp">
+        <span class="metric-value" id="m-susp">&mdash;</span>
+        <span class="metric-label">Suspicious, watching</span>
+      </div>
+      <div class="metric">
+        <span class="metric-value" id="m-mtta">&mdash;</span>
+        <span class="metric-label">Avg. response time</span>
+      </div>
+    </section>
+
+    <div class="chart-card">
+      <h3>Events over time</h3>
+      <p class="page-sub">Last 14 days, by day raised.</p>
+      <div class="bars" id="timeline-chart"></div>
+      <div class="legend">
+        <span><span class="legend-swatch" style="background:#a3271f;"></span>Fault</span>
+        <span><span class="legend-swatch" style="background:#b3730a;"></span>Suspicious</span>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3>Events by sensor type</h3>
+      <p class="page-sub">Which kind of fixture is triggering the most alerts.</p>
+      <div id="sensor-chart"></div>
+    </div>
+  </main>
+
+  <script src="shared/api.js"></script>
+  <script src="shared/nav.js"></script>
+  <script src="metrics.js"></script>
+</body>
+</html>

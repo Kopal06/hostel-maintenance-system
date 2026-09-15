@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Facility Watch — Event Log</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="log">
+  <div id="nav-mount"></div>
+
+  <main class="page">
+    <div class="page-header">
+      <div>
+        <h2>Event log</h2>
+        <p class="page-sub">Permanent history of every Suspicious/Fault event ever raised — nothing here is ever deleted, even after it's resolved.</p>
+      </div>
+      <button class="btn" id="export-btn" style="max-width:160px;">Export CSV</button>
+    </div>
+
+    <div class="page-header" style="margin-bottom: 14px;">
+      <div class="pill-row" id="filter-row">
+        <button class="pill pill--active" data-filter="ALL">All</button>
+        <button class="pill" data-filter="FAULT">Fault</button>
+        <button class="pill" data-filter="SUSPICIOUS">Suspicious</button>
+      </div>
+      <input class="search-input" id="search" placeholder="Search node, facility, location…" />
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>When</th>
+            <th>Severity</th>
+            <th>Node</th>
+            <th>Location</th>
+            <th>Reading</th>
+            <th>Fault score</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="log-body"></tbody>
+      </table>
+    </div>
+    <p class="empty-state" id="empty-msg" style="display:none; margin-top: 14px;">No events match this filter.</p>
+  </main>
+
+  <script src="shared/api.js"></script>
+  <script src="shared/nav.js"></script>
+  <script src="log.js"></script>
+</body>
+</html>

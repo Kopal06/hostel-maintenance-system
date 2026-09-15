@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Facility Watch — Nodes</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="nodes">
+  <div id="nav-mount"></div>
+
+  <main class="page">
+    <div class="page-header">
+      <div>
+        <h2>Sensor nodes</h2>
+        <p class="page-sub">Every node that has ever reported a Suspicious/Fault event, with its lifetime history.</p>
+      </div>
+    </div>
+    <div id="node-grid" class="node-grid"></div>
+    <p class="empty-state" id="empty-msg" style="display:none;">No nodes have reported in yet. Run the virtual node simulator (or flash real hardware) to see nodes appear here.</p>
+  </main>
+
+  <script src="shared/api.js"></script>
+  <script src="shared/nav.js"></script>
+  <script src="nodes.js"></script>
+</body>
+</html>

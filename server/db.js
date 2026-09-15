@@ -134,6 +134,57 @@ function metrics() {
   };
 }
 
+function listNodes() {
+  const rows = db.prepare(`SELECT * FROM nodes ORDER BY last_seen DESC`).all();
+  const countStmt = db.prepare(
+    `SELECT COUNT(*) total,
+            SUM(CASE WHEN classification='FAULT' THEN 1 ELSE 0 END) faults,
+            SUM(CASE WHEN classification='SUSPICIOUS' THEN 1 ELSE 0 END) suspicious,
+            SUM(CASE WHEN resolved_at IS NULL THEN 1 ELSE 0 END) active
+     FROM events WHERE node_id = ?`
+  );
+  return rows.map((n) => {
+    const counts = countStmt.get(n.node_id);
+    return {
+      ...n,
+      sensor_types: JSON.parse(n.sensor_types || '[]'),
+      totalEvents: counts.total || 0,
+      faultEvents: counts.faults || 0,
+      suspiciousEvents: counts.suspicious || 0,
+      activeEvents: counts.active || 0,
+    };
+  });
+}
+
+function metricsBySensor() {
+  return db
+    .prepare(
+      `SELECT sensor_type,
+              COUNT(*) total,
+              SUM(CASE WHEN classification='FAULT' THEN 1 ELSE 0 END) faults,
+              SUM(CASE WHEN classification='SUSPICIOUS' THEN 1 ELSE 0 END) suspicious
+       FROM events GROUP BY sensor_type ORDER BY total DESC`
+    )
+    .all();
+}
+
+function metricsTimeline(days = 14) {
+  const since = Date.now() - days * 24 * 60 * 60 * 1000;
+  const rows = db
+    .prepare(
+      `SELECT created_at, classification FROM events WHERE created_at >= ? ORDER BY created_at ASC`
+    )
+    .all(since);
+  const buckets = {};
+  for (const r of rows) {
+    const day = new Date(r.created_at).toISOString().slice(0, 10);
+    if (!buckets[day]) buckets[day] = { date: day, fault: 0, suspicious: 0 };
+    if (r.classification === 'FAULT') buckets[day].fault += 1;
+    else buckets[day].suspicious += 1;
+  }
+  return Object.values(buckets).sort((a, b) => (a.date < b.date ? -1 : 1));
+}
+
 module.exports = {
   db,
   upsertNode,
@@ -144,4 +195,7 @@ module.exports = {
   resolveEvent,
   getEvent,
   metrics,
+  listNodes,
+  metricsBySensor,
+  metricsTimeline,
 };

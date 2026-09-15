@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Facility Watch — Active Alerts</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="alerts">
+  <div id="nav-mount"></div>
+
+  <main class="page">
+    <div class="page-header">
+      <div>
+        <h2>Active alerts</h2>
+        <p class="page-sub">Everything currently unresolved, across every block. Acknowledge/resolve moves a card to the Event Log.</p>
+      </div>
+    </div>
+
+    <div id="active-list" class="alert-list"></div>
+  </main>
+
+  <template id="alert-card-template">
+    <article class="card">
+      <div class="card-top">
+        <span class="badge"></span>
+        <span class="card-node"></span>
+      </div>
+      <p class="card-location"></p>
+      <p class="card-detail"></p>
+      <div class="card-meta">
+        <span class="card-time"></span>
+        <span class="card-score"></span>
+      </div>
+      <div class="card-actions">
+        <button class="btn btn-ack" data-action="acknowledge">Acknowledge</button>
+        <button class="btn btn-resolve" data-action="resolve">Mark resolved</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="shared/api.js"></script>
+  <script src="shared/nav.js"></script>
+  <script src="alerts.js"></script>
+</body>
+</html>

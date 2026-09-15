@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Facility Watch — About</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="about">
+  <div id="nav-mount"></div>
+
+  <main class="page">
+    <div class="page-header">
+      <div>
+        <h2>About this system</h2>
+        <p class="page-sub">Context-Aware Fault Verification & Networked Maintenance Alert System</p>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>
+        This dashboard is the front end for a system that watches shared hostel facilities
+        (washroom taps, electrical points, corridor lights) for faults — a running tap,
+        a stuck-on light, a current surge — <b>without cameras</b> and without flooding
+        maintenance staff with false alarms from ordinary use.
+      </p>
+
+      <h3>How it decides something is actually wrong</h3>
+      <p>
+        Each sensor node runs the <b>Context-Aware Fault Verification Algorithm (CAFVA)</b>
+        locally: a reading only becomes an alert if it persists for long enough
+        <i>and</i> there's no one around (via a PIR presence sensor) to explain it.
+        A tap running while someone showers is Normal Usage and is never transmitted at all —
+        only Suspicious and Fault classifications ever leave the node. That's what keeps this
+        system's network and server load low compared to always-on camera monitoring.
+      </p>
+      <img src="assets/cafva_flowchart.png" alt="CAFVA decision flowchart" />
+
+      <h3>System architecture</h3>
+      <p>
+        Sensor nodes classify locally, then report over Wi-Fi to a central server, which
+        pushes live updates to this dashboard over WebSocket.
+      </p>
+      <img src="assets/architecture_diagram.png" alt="System architecture diagram" />
+
+      <h3>Tech stack</h3>
+      <div class="stack-list">
+        <span class="stack-chip">ESP32 (Arduino/C++)</span>
+        <span class="stack-chip">Node.js</span>
+        <span class="stack-chip">Express</span>
+        <span class="stack-chip">SQLite</span>
+        <span class="stack-chip">WebSocket</span>
+        <span class="stack-chip">Vanilla HTML/CSS/JS</span>
+      </div>
+
+      <h3>Project status</h3>
+      <p>
+        Algorithm, server, and dashboard are implemented and tested (8/8 automated tests
+        passing on the fault-verification logic). Physical sensor hardware — ESP32 boards,
+        flow/current/PIR/light sensors — is the next build phase; until then, this dashboard
+        is being exercised by a virtual sensor-node simulator that runs the identical
+        classification logic against realistic scripted scenarios.
+      </p>
+
+      <h3>Pages in this dashboard</h3>
+      <ul>
+        <li><b>Dashboard</b> — top-line snapshot: metrics + a preview of active alerts and nodes.</li>
+        <li><b>Active Alerts</b> — everything currently unresolved, with acknowledge/resolve actions.</li>
+        <li><b>Event Log</b> — permanent history, filterable, exportable to CSV.</li>
+        <li><b>Nodes</b> — every registered sensor node and its lifetime alert history.</li>
+        <li><b>Metrics</b> — trends over time and breakdown by sensor type.</li>
+      </ul>
+    </div>
+  </main>
+
+  <script src="shared/api.js"></script>
+  <script src="shared/nav.js"></script>
+</body>
+</html>

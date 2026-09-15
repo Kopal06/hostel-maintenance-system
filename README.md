@@ -20,8 +20,15 @@ simulation/             Node.js virtual sensor nodes standing in for hardware
   scenarios.js          Sensor traces incl. R1 Section 14's worked example
   virtual_node.js        Runs 5 virtual nodes against the live server
 server/                 Express + SQLite + WebSocket central server
-dashboard/              Browser-based maintenance dashboard (no build step)
-tests/test_cafva.js     Validates CAFVA against the R1 worked example
+dashboard/              Multi-page maintenance dashboard (no build step)
+  index.html             Overview: metrics + preview of alerts/nodes
+  alerts.html             Full active-alerts list, acknowledge/resolve
+  log.html                Full permanent event history, filter + CSV export
+  nodes.html              Every registered sensor node + its lifetime stats
+  metrics.html            Timeline chart + breakdown by sensor type
+  about.html              Architecture/algorithm explainer for reviewers
+  shared/                 nav.js (shared nav bar) + api.js (fetch/WebSocket helpers)
+tests/test_cafva.js    Validates CAFVA against the R1 worked example
 docs/                   Architecture diagrams for the Review-2 report
 ```
 
@@ -47,6 +54,11 @@ Watch the dashboard update live as the virtual nodes report Suspicious and
 Fault events — and notice that the "normal usage" control node (an occupied
 shower) never appears on the dashboard at all, which is the point of the
 invention.
+
+The dashboard is a real multi-page site (separate HTML pages with normal
+`<a href>` navigation, not a client-side-routed single-page app):
+Dashboard, Active Alerts, Event Log, Nodes, Metrics, and About, linked via
+a shared nav bar (`dashboard/shared/nav.js`).
 
 ## What's real vs. simulated right now
 

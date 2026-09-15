@@ -110,6 +110,18 @@ app.get('/api/metrics', (req, res) => {
   res.json(db.metrics());
 });
 
+app.get('/api/nodes', (req, res) => {
+  res.json(db.listNodes());
+});
+
+app.get('/api/metrics/by-sensor', (req, res) => {
+  res.json(db.metricsBySensor());
+});
+
+app.get('/api/metrics/timeline', (req, res) => {
+  res.json(db.metricsTimeline(Number(req.query.days) || 14));
+});
+
 app.get('/api/health', (req, res) => res.json({ status: 'ok', uptime: process.uptime() }));
 
 server.listen(PORT, () => {
