@@ -30,7 +30,7 @@ const PORT = process.env.PORT || 4000;
 
 const app = express();
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '..', 'dashboard')));
+app.use(express.static(path.join(__dirname, '..', '..')));
 
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server, path: '/ws' });
