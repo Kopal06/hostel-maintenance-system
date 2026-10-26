@@ -129,15 +129,14 @@ class CAFVANode {
     const FS = this.w1 * durationTerm + this.w2 * occupancyTerm + this.w3 * magnitudeTerm;
 
     let state;
-    if (durationSec >= this.Wfault && Op === 0) {
-      state = STATE.FAULT;
-    } else if (FS >= this.Tfault) {
-      state = STATE.FAULT;
-    } else if (FS >= this.Tsusp && durationSec >= this.Wsusp) {
-      state = STATE.SUSPICIOUS;
-    } else {
-      state = STATE.NORMAL;
-    }
+
+if (durationSec >= this.Wfault && Op === 0) {
+  state = STATE.FAULT;
+} else if (durationSec >= this.Wsusp && FS >= this.Tsusp) {
+  state = STATE.SUSPICIOUS;
+} else {
+  state = STATE.NORMAL;
+}
 
     this._state = state;
     return { state, faultScore: FS, duration: durationSec, Op };
