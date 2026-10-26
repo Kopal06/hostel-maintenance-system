@@ -103,16 +103,14 @@ class CAFVANode {
     float FS = cfg_.w1 * durationTerm + cfg_.w2 * occupancyTerm + cfg_.w3 * magnitudeTerm;
 
     FaultState state;
-    if (durationSec >= cfg_.Wfault && Op == 0.0f) {
-      state = FaultState::FAULT;
-    } else if (FS >= cfg_.Tfault) {
-      state = FaultState::FAULT;
-    } else if (FS >= cfg_.Tsusp && durationSec >= cfg_.Wsusp) {
-      state = FaultState::SUSPICIOUS;
-    } else {
-      state = FaultState::NORMAL;
-    }
 
+if (durationSec >= cfg_.Wfault && Op == 0.0f) {
+  state = FaultState::FAULT;
+} else if (durationSec >= cfg_.Wsusp && FS >= cfg_.Tsusp) {
+  state = FaultState::SUSPICIOUS;
+} else {
+  state = FaultState::NORMAL;
+}
     state_ = state;
     return CAFVAResult{state, FS, durationSec, Op, false};
   }
